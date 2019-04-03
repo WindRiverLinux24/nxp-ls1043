@@ -1,0 +1,352 @@
+        NXP LS1043 Boards
+
+
+1. About this document
+======================
+This document describes the common and non-hardware specific information.
+Please refer to README.hardware for hardware specific information.
+
+Dependencies
+------------
+This layer depends on the oe-core version supplied with Wind River Linux
+and the wr-kernel layer.
+
+
+Maintenance
+-----------
+This layer is maintained by Wind River Systems, Inc.
+Contact <support@windriver.com> or your support representative for more
+information on submitting changes.
+
+
+Building the nxp-ls1043 layer
+-----------------------------
+This layer and wr-kernel layer should be added to bblayers.conf. This
+is done automatically when using the Wind River configure wrapper.
+
+
+License
+-------
+Copyright (C) 2019 Wind River Systems, Inc.
+
+The right to copy, distribute or otherwise make use of this software may
+be licensed only pursuant to the terms of an applicable Wind River license
+agreement. No license to Wind River intellectual properly rights is granted
+herein. All rights not licensed by Wind River are reserved by Wind River.
+
+Source code included in tree for individual recipes is under the LICENSE
+stated in each recipe (.bb file) unless other stated.
+
+2. BSP Kernel and Distros
+=========================
+
+The following table summarizes the valid Wind River Linux distros for this BSP.
+'Y' in each content cell stands for supported; 'N' stands for not supported:
+
+  +--------------+-------------+-------------+-------------+
+  | valid/distro |   wrlinux   | wrlinux-cgl | wrlinux-ovp |
+  +--------------+-------------+-------------+-------------+
+  |    valid     |      Y      |      Y      |      N      |
+  +--------------+-------------+-------------+-------------+
+
+For the supported kernel type for this BSP, please check the TARGET_SUPPORTED_KTYPES
+by running 'bitbake -e virtual/kernel | grep "^TARGET_SUPPORTED_KTYPES="'.
+
+3. Board Specific Patches
+=========================
+
+To get a list of patches applied to the kernel specific to this BSP
+along with patch descriptions use git whatchanged on the default
+kernel (git whatchanged <kernel_type>..<bsp_name>). For example:
+
+  # cd tmp-glibc/work-shared/<bsp_name>/kernel-source
+  # git whatchanged standard/base..standard/nxp/lsdk-1812/nxp-ls1043
+
+
+4. Boot Instructions
+====================
+
+The typical u-boot settings apply to these boards. You will need to use
+setenv, printenv and saveenv, to configure, display and store respectively
+your network configuration details and kernel command line. In order to
+TFTP a kernel, you need at a minimum to set the following:
+
+	- ipaddr
+	- gatewayip
+	- netmask
+	- serverip
+	- loadaddr
+	- dtbfile
+	- dtbaddr
+	- ethaddr
+	- eth1addr
+
+Target specifics are usually set in the "bootargs" variable, and the
+kernel image is set in the "kernelfile" variable. Don't forget that if you
+want these values to be available after a power cycle you will need to run
+the saveenv command.
+
+Typically convenience macros exist that will create a complete bootargs
+command line for the kernel based on variables that contain individual
+settings.  Since these macros exist as env variables themselves, they
+may or may not be present depending on who installed and configured
+u-boot for the board.
+
+The console device for the board is ttyS0 at 115200 baud. For the DTB
+address, 0x90000000 was used with success by Wind River. The load address
+must be high enough to not interfere with kernel decompression. A value
+of 0x81000000 was used with success for all kernels tested by Wind River.
+
+4.1 NFS Root File System
+------------------------
+
+Example settings for the monitor (u-boot) are shown below:
+
+nfsboot=setenv bootargs root=/dev/nfs rw nfsroot=$serverip:$rootpath \
+ip=$ipaddr:$serverip:$gatewayip:$netmask:$hostname:$netdev:off \
+console=$consoledev,$baudrate $othbootargs;tftp $kernel_addr_r $kernelfile; \
+tftp $fdt_addr_r $fdtfile;booti $kernel_addr_r - $fdt_addr_r
+ethaddr=00:04:9F:02:00:FD
+eth1addr=00:04:9F:02:01:FD
+eth2addr=00:04:9F:02:02:FD
+kernel_addr_r=0x81000000
+fdt_addr_r=0x90000000
+gatewayip=192.168.1.1
+netmask=255.255.255.0
+ipaddr=192.168.1.100
+serverip=192.168.1.2
+netdev=eth0
+kernelfile=Image
+fdtfile=devicetree-Image-fsl-ls1043a-rdb-sdk.dtb
+rootpath=/tftpboot/rootfs
+consoledev=ttyS0
+baudrate=115200
+othbootargs=earlycon=uart8250,mmio,0x21c0500
+
+5. Update NXP's pre-built image
+===============================
+
+5.1. On-Board NOR Flash vbank Configuration
+-------------------------------------------
+
+NOR flash is divided into 8 virtual banks named vbank0 to vbank7.
+Depending on on-board switch configuration or CPLD registers; software
+boots from vbank0 and vbank4. The default on-board switch configuration
+boots the board from vbank0. The board can boot from vbank4 by using
+the qixis_reset altbank command from the vbank0 u-boot prompt.
+
+The RDB comes pre-loaded with all binaries in vbank0.
+Users are able to program images in 2 separate virtual flash banks (vbank0
+and vbank4). Images in vbank0 are locked to prevent accidental erasure or
+corruption. Initially, the same images are also programmed in vbank4. This
+bank is not locked so users have the option to download and program new
+images into vbank4 as needed. The instructions below list commands to
+download images to vbank4 and to boot from vbank4. Note that vbank4 is also
+referred to as the alternate bank.
+
+5.2. NXP's pre-built image
+--------------------------
+
+NXP provides a pre-built image which contains U-Boot, RCW, etc.
+Please download it through:
+
+ wget http://www.nxp.com/lgfiles/sdk/lsdk1812/firmware_ls1043ardb_uboot_norboot.img
+
+and burn it to the target board under the U-Boot prompt using the commands below:
+
+=> tftp a0000000 firmware_ls1043ardb_uboot_norboot.img
+=> protect off 640000000 +$filesize && erase 640000000 +$filesize &&
+cp.b a0000000 640000000 $filesize
+
+Then use
+
+=> cpld reset altbank
+
+to switch to vbank4.
+
+5.3. NXP's SDK user manual
+--------------------------
+
+To get more details about above descriptions, please refer to instructions
+mentioned in the sections
+
+	"4.4 LSDK Memory Layout"
+and
+	"4.1.4 LS1043ARDB"
+
+in the NXP's SDK user manual
+
+	"Layerscape Software Development Kit 18.12 Documentation.pdf".
+
+6. Creating Partitioned Images(WIC)
+===================================
+
+User can use the OpenEmbedded Image Creator, wic, to create the properly
+partitioned image on a SD card. The wic command
+generates partitioned images from existing OpenEmbedded build artifacts.
+User can refer to the below URL to get more WIC details:
+
+http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#creating-partitioned-images-using-wic
+
+This BSP supports disk images for SD card.
+After build the project, user will get a WIC image under the directory
+tmp-glibc/deploy/images/<bsp name>/ ,such as:
+
+WIC image for SD card:
+tmp-glibc/deploy/images/nxp-ls1043/wrlinux-image-glibc-std-nxp-ls1043.wic
+
+
+Then user can write the output image to a SD card. WIC image contains kernel,
+dtb, rootfs and u-boot. User still need to write fman microcode image to SD card
+by "dd" command.
+
+To change default booting configuration in uboot, user can overwrite following
+variable in uboot and save to SD by saveenv command:
+
+- kernelfile, define kernel image file name.
+- fdtfile, define device-tree image file name.
+- othbootargs, define additional booting parameters pass to kernel.
+
+6.1 Burn images to SD card
+--------------------------
+
+To burn uboot and WIC images to SD card, user need to execute two steps:
+
+1) Burn WIC image
+
+# dd if=wrlinux-image-glibc-std-nxp-ls1043.wic of=/dev/your_sd_dev
+
+2) User can find fsl_fman_ucode_ls1043_r1.1_106_4_18.bin
+from git://github.com/qoriq-open-source/fm-ucode.git, then burn it with:
+
+# dd if=fsl_fman_ucode_ls1043_r1.1_103_4_18.bin of=/dev/your_sd_dev bs=512 seek=18432 conv=fsync
+
+6.2 Set board switch
+--------------------
+
+Board can boot from SD card by setting sw4[1:8] as '00100000' and sw5[1:8] as '00100010'.
+After power up, if a bootable SD card inserted, then system will boot from SD
+card.
+
+7. Features
+===========
+
+7.1 IEEE 1588 PTP testing
+-------------------------
+
+7.1.1 Introduction
+------------------
+
+This testing method is based on PTPd project, only some basic testing commands
+have been tested on this BSP because the accurate PTP testing scenario is a bit
+complicated according to IEEE PTPv2.
+
+7.1.2 Usage and verification
+----------------------------
+
+Two boards are necessary for this case, one for master, another is slave,
+the following commands show to use PTP time as stamping mode based on the
+peer delay (P2P) mechanism:
+
+     master :
+     root@128:~# ptpd2 -i eth2 -MV
+     02:36:18.339405 ptpd2[634].startup (info)      (___) Configuration OK
+     02:36:18.340935 ptpd2[634].startup (info)      (___) Successfully acquired lock on /var/run/ptpd2.lock
+     02:36:18.341410 ptpd2[634].startup (notice)    (___) PTPDv2 started successfully on eth2 using "masteronly" preset (PID 634)
+     02:36:18.341506 ptpd2[634].startup (info)      (___) TimingService.PTP0: PTP service init
+     02:36:18.343434, init,
+     02:36:18.448931 ptpd2[634].eth2 (notice)    (lstn_init) Now in state: PTP_LISTENING
+     02:36:18.449046, lstn_init,  1
+     02:36:28.341629 ptpd2[634].eth2 (notice)    (lstn_init) TimingService.PTP0: elected best TimingService
+     02:36:28.341749 ptpd2[634].eth2 (info)      (lstn_init) TimingService.PTP0: acquired clock control
+     02:36:30.452226 ptpd2[634].eth2 (notice)    (mst) Now in state: PTP_MASTER, Best master: 00049ffffe03cbc9(unknown)/1 (self)
+     #Timestamp, State, Clock ID, One Way Delay, Offset From Master, Slave to Master, Master to Slave, Observed Drift, Last packet Received, One Way Delay Mean, One Way Delay Std Dev, Offset From Master Mean, Offset From Master Std Dev, Observed Drift Mean, Observed Drift Std Dev, raw delayMS, raw delaySM
+
+     slave:
+     root@ls1043:~# ptpd2 -i eth6 -sV
+     02:39:54.066864 ptpd2[564].startup (info)      (___) Configuration OK
+     02:39:54.067923 ptpd2[564].startup (warning)   (___) Interface eth6 seems to be down. PTPd will not operate correctly until it's up.
+     02:39:54.068092 ptpd2[564].startup (info)      (___) Successfully acquired lock on /var/run/ptpd2.lock
+     02:39:54.068523 ptpd2[564].startup (notice)    (___) PTPDv2 started successfully on eth6 using "slaveonly" preset (PID 564)
+     02:39:54.068596 ptpd2[564].startup (info)      (___) TimingService.PTP0: PTP service init
+     02:39:54.068711, init,
+     02:39:54.069636 ptpd2[564].eth6 (warning)   (init) Interface eth6 seems to be down. PTPd will not operate correctly until it's up.
+     02:39:54.070643 ptpd2[564].eth6 (info)      (init) Observed_drift loaded from kernel: 0 ppb
+     02:39:54.170948 ptpd2[564].eth6 (notice)    (lstn_init) Now in state: PTP_LISTENING
+     02:39:54.171025, lstn_init,  1
+     02:40:04.068702 ptpd2[564].eth6 (notice)    (lstn_init) TimingService.PTP0: elected best TimingService
+     02:40:04.068818 ptpd2[564].eth6 (info)      (lstn_init) TimingService.PTP0: acquired clock control
+
+7.2. Multilib
+-------------
+
+By default, this BSP is configured as a 64-bit kernel and 64-bit userspace
+with 32-bit userspace multilib support.
+
+Multilib is also supported by this BSP.
+
+1. To add 32-bit multilib support for an existing project, use:
+
+    bitbake lib32-wrlinux-image-glibc-std
+
+2. To add 32-bit mulilib support for a specific package, use:
+
+    bitbake lib32-<pkg-name>
+
+7.3 kexec/kdump
+---------------
+
+To build the boot or capture kernel, use the following option with the configure
+command for your project:
+
+     --templates feature/kexec feature/kdump
+
+To reserve a memory region for the capture kernel, pass "crashkernel=512M"
+via the U-Boot command line.
+
+NOTES:
+1. Use vmlinux as a secondary kernel. It can be found in the directory
+   tmp-glibc/work/<bsp name>-wrs-linux/linux-yocto/<kernel version>/linux-<bsp name>-<kernel type>-build/vmlinux
+
+2. 512 MB (the size of the memory reserved for crash kernel) is the
+   recommended amount of memory. If you add more features to the kernel, you
+   can increase this value to accommodate the capture kernel.
+
+3. Kdump: PCI-MSI and SMP is unsupported in 2nd kernel.
+   User needs to append two arguments "pci=nomsi maxcpus=1".
+   Since this 2nd kernel operates under significantly constrained
+   initialization conditions and is not meant to be a "replacement" kernel.
+   Rather it has a single goal -- to enable data collection with respect to
+   the issue that impacted the initial kernel, and nothing else.
+
+For more detailed information about kdump, please refer to
+Documentation/kdump/kdump.txt in the kernel source tree.
+
+7.4 DPDK
+--------
+7.4.1 Boot Arguments
+--------------------
+The following boot arguments can be used in order to obtain the best performance
+for DPDK applications:
+ default_hugepagesz=2MB hugepagesz=2MB hugepages=448 isolcpus=1-3 bportals=s0 qportals=s0
+
+To use DPDK applications, user need load specific DTB, fsl-ls1043a-rdb-usdpaa.dtb.
+The DTB can be found in tmp-glibc/deploy/images/nxp-ls1043/, and it alread
+installed into WIC image.
+
+7.4.2 Sample Applications
+-----------------------
+In order to get the sample applications provided by the DPDK, you need to enable
+bsp-extras template. You can use the steps like the following to run the sample
+applications. Take the l2fwd as example:
+  1. Configure the DPAA platform:
+	export DPAA_NUM_RX_QUEUES=1
+	export DPAA_FMC_MODE=1
+	fmc -c /usr/bin/dpdk-example/extras/dpaa/usdpaa_config_ls1043.xml \
+		 -p /usr/bin/dpdk-example/extras/dpaa/usdpaa_policy_hash_ipv4_1queue.xml -a
+	mkdir /mnt/hugepages
+	mount -t hugetlbfs none /mnt/hugepages
+
+  2. Run the layer 2 forwarding application:
+       /usr/bin/dpdk-example/l2fwd -c 0x2 -n 1 -- -p 0x1 -q 1
+

@@ -1,0 +1,99 @@
+		NXP LS1043A-RDB Board Support Package
+
+
+Table of Contents
+=================
+
+1. Supported Boards
+2. Change History
+3. BSP Features
+4. BSP Notes
+
+
+1. Supported Boards
+===================
+
+This BSP supports the following boards:
+
+  + NXP LS1043A-RDB: SCH-28529 REV B1 (LS1043A Rev1.0)
+
+2. Change History
+=================
+
+  - 2019/04 (LIN1018-3639): Wind River Linux 10.18 RCPL06. Standard and preempt-rt
+                       based on NXP LSDK1812.
+  - 2017/07 (US95381): Wind River Linux 8.0 RCPL19, add support LS1043A Rev1.1
+                       Based on QorIQ-SDK-2.0-1703.
+  - 2016/09 (US83715): Wind River Linux 8.0 RCPL9, Freescale LS1043A-RDB.
+                       Based on QorIQ-Linux-SDK-v2.0-SOURCE.iso and binary
+                       QorIQLinuxSDKv2.0AARCH64IMAGE.iso
+
+
+3. BSP Features
+===============
+
+3.1 Supported Features
+----------------------
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+  o General Platform
+	+ DMA Engine: The enhanced direct memory access (EDMA) controller
+	+ HugeTLB
+
+  o Bus
+	+ IFC: Integrated Flash Controller
+	+ I2C: Freescale On-Chip I2C controller
+	+ PCI-Express: Freescale PCI-e Host Bridge
+	+ SPI: Freescale DSPI Controller in master mode
+	+ USB: USB 3.0 Host Controller
+
+  o Network
+	+ Ethernet: RGMII, QSGMII
+	+ IEEE 1588 Timer (DPAA CLOCK)
+
+  o Storage
+	+ EEPROM:
+	+ NAND Flash: MT29F4G08ABBDAH4 (512MB)
+	+ NOR Flash: MT28EW01G (128MB)
+	+ SPI Flash: N25Q128A13EF840E (16MB)
+	+ SD/MMC: Freescale eSDHC controller
+
+  o HW_Offload
+	+ Data Path Accel: BMAN
+	+ Data Path Accel: FMAN
+	+ Data Path Accel: QMAN
+	+ SEC Engine (SEC 5.4): FSL CAAM
+
+  o Misc Devices
+	+ RTC (DS1307)
+	+ DUART
+	+ RANDOM from CAAM
+	+ WDOG: watchdog timer(LS1043)
+
+3.2 Unsupported Features
+------------------------
+
+The following features are not validated:
+
+  x LPUART: Low Power Universal asynchronous receiver/transmitter
+  x QUICC Engine
+
+
+4. BSP Notes
+============
+
+4.1 Validated Board Info
+------------------------
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+LS1043A rev1.0:
+	Processor:              LS1043A rev1.0 (0x87920410)
+	Board Revision:	        REV B1, CPLD: V1.4, PCBA: V2.0
+	BootLoader:             U-Boot
+	BootLoader Version:     U-Boot 2018.09-gc08de7c3c9 (Dec 23 2018 - 11:54:05 +0800)
+	FMAN Firmware:          106.4.18
+	PPA Firmware:           LSDK-18.09-dirty
