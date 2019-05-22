@@ -31,7 +31,7 @@ Copyright (C) 2019 Wind River Systems, Inc.
 
 The right to copy, distribute or otherwise make use of this software may
 be licensed only pursuant to the terms of an applicable Wind River license
-agreement. No license to Wind River intellectual properly rights is granted
+agreement. No license to Wind River intellectual property rights is granted
 herein. All rights not licensed by Wind River are reserved by Wind River.
 
 Source code included in tree for individual recipes is under the LICENSE
@@ -60,7 +60,7 @@ along with patch descriptions use git whatchanged on the default
 kernel (git whatchanged <kernel_type>..<bsp_name>). For example:
 
   # cd tmp-glibc/work-shared/<bsp_name>/kernel-source
-  # git whatchanged standard/base..standard/nxp/lsdk-1812/nxp-ls1043
+  # git whatchanged v4.18/base..v4.18/standard/nxp-ls/lsdk-1812/nxp-ls1043
 
 
 4. Boot Instructions
@@ -117,7 +117,7 @@ ipaddr=192.168.1.100
 serverip=192.168.1.2
 netdev=eth0
 kernelfile=Image
-fdtfile=devicetree-Image-fsl-ls1043a-rdb-sdk.dtb
+fdtfile=fsl-ls1043a-rdb-sdk.dtb
 rootpath=/tftpboot/rootfs
 consoledev=ttyS0
 baudrate=115200
@@ -219,7 +219,7 @@ To burn uboot and WIC images to SD card, user need to execute two steps:
 2) User can find fsl_fman_ucode_ls1043_r1.1_106_4_18.bin
 from git://github.com/qoriq-open-source/fm-ucode.git, then burn it with:
 
-# dd if=fsl_fman_ucode_ls1043_r1.1_103_4_18.bin of=/dev/your_sd_dev bs=512 seek=18432 conv=fsync
+# dd if=fsl_fman_ucode_ls1043_r1.1_106_4_18.bin of=/dev/your_sd_dev bs=512 seek=18432 conv=fsync
 
 6.2 Set board switch
 --------------------

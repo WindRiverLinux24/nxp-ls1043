@@ -20,7 +20,7 @@ This BSP supports the following boards:
 2. Change History
 =================
 
-  - 2019/04 (LIN1018-3639): Wind River Linux 10.18 RCPL06. Standard and preempt-rt
+  - 2019/06 (LIN1018-3639): Wind River Linux 10.18 RCPL07. Standard and preempt-rt
                        based on NXP LSDK1812.
   - 2017/07 (US95381): Wind River Linux 8.0 RCPL19, add support LS1043A Rev1.1
                        Based on QorIQ-SDK-2.0-1703.
