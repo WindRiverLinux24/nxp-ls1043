@@ -14,6 +14,7 @@ IMAGE_FSTYPES += "tar.bz2 wic wic.bmap"
 WKS_FILE = "nxp-ls1043-sdimage.wks"
 IMAGE_INSTALL_append = " kernel-devicetree kernel-image-image"
 do_image_wic[depends] += "mtools-native:do_populate_sysroot dosfstools-native:do_populate_sysroot"
+IMAGE_BOOT_FILES ?= " Image fsl-ls1043a-rdb-sdk.dtb"
 
 # multilib support
 MULTILIBS ?= "multilib:lib32"
