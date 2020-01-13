@@ -4,4 +4,4 @@
 
 require linux-yocto-nxp-ls1043.inc
 
-KBRANCH_nxp-ls1043 = "v4.18/standard/nxp-ls/lsdk-1812/${KMACHINE}"
+KBRANCH_nxp-ls1043 = "v4.18/standard/nxp-ls/lsdk-1909/${KMACHINE}"
