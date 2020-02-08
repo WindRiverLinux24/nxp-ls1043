@@ -49,30 +49,17 @@ the corresponding h/w features exist.
 	+ I2C: Freescale On-Chip I2C controller
 	+ PCI-Express: Freescale PCI-e Host Bridge
 	+ SPI: Freescale DSPI Controller in master mode
-	+ USB: USB 3.0 Host Controller
-
-  o Network
-	+ Ethernet: RGMII, QSGMII
-	+ IEEE 1588 Timer (DPAA CLOCK)
 
   o Storage
 	+ EEPROM:
 	+ NAND Flash: MT29F4G08ABBDAH4 (512MB)
 	+ NOR Flash: MT28EW01G (128MB)
 	+ SPI Flash: N25Q128A13EF840E (16MB)
-	+ SD/MMC: Freescale eSDHC controller
-
-  o HW_Offload
-	+ Data Path Accel: BMAN
-	+ Data Path Accel: FMAN
-	+ Data Path Accel: QMAN
-	+ SEC Engine (SEC 5.4): FSL CAAM
 
   o Misc Devices
 	+ RTC (DS1307)
 	+ DUART
 	+ RANDOM from CAAM
-	+ WDOG: watchdog timer(LS1043)
 
 3.2 Unsupported Features
 ------------------------
@@ -81,7 +68,17 @@ The following features are not validated:
 
   x LPUART: Low Power Universal asynchronous receiver/transmitter
   x QUICC Engine
-
+  x USB: USB 3.0 Host Controller
+  x Network
+         Ethernet: RGMII, QSGMII
+         IEEE 1588 Timer (DPAA CLOCK)
+  x SD/MMC: Freescale eSDHC controller
+  x HW_Offload
+         Data Path Accel: BMAN
+         Data Path Accel: FMAN
+         Data Path Accel: QMAN
+         SEC Engine (SEC 5.4): FSL CAAM
+  x WDOG: watchdog timer(LS1043)
 
 4. BSP Notes
 ============
