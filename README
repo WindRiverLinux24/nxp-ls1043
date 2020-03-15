@@ -308,3 +308,60 @@ Multilib is also supported by this BSP.
 
     bitbake lib32-<pkg-name>
 
+7.3 kexec/kdump
+---------------
+
+To build the boot or capture kernel, use the following option with the configure
+command for your project:
+
+     --templates feature/kexec feature/kdump
+
+To reserve a memory region for the capture kernel, pass "crashkernel=512M"
+via the U-Boot command line.
+
+NOTES:
+1. Use vmlinux as a secondary kernel. It can be found in the directory
+   tmp-glibc/work/<bsp name>-wrs-linux/linux-yocto/<kernel version>/linux-<bsp name>-<kernel type>-build/vmlinux
+
+2. 512 MB (the size of the memory reserved for crash kernel) is the
+   recommended amount of memory. If you add more features to the kernel, you
+   can increase this value to accommodate the capture kernel.
+
+3. Kdump: PCI-MSI and SMP is unsupported in 2nd kernel.
+   User needs to append two arguments "pci=nomsi maxcpus=1".
+   Since this 2nd kernel operates under significantly constrained
+   initialization conditions and is not meant to be a "replacement" kernel.
+   Rather it has a single goal -- to enable data collection with respect to
+   the issue that impacted the initial kernel, and nothing else.
+
+For more detailed information about kdump, please refer to
+Documentation/kdump/kdump.txt in the kernel source tree.
+
+7.4 DPDK
+--------
+7.4.1 Boot Arguments
+--------------------
+The following boot arguments can be used in order to obtain the best performance
+for DPDK applications:
+ default_hugepagesz=2MB hugepagesz=2MB hugepages=448 isolcpus=1-3 bportals=s0 qportals=s0
+
+To use DPDK applications, user need load specific DTB, fsl-ls1043a-rdb-usdpaa.dtb.
+The DTB can be found in tmp-glibc/deploy/images/nxp-ls1043/, and it alread
+installed into WIC image.
+
+7.4.2 Sample Applications
+-----------------------
+In order to get the sample applications provided by the DPDK, you need to enable
+bsp-extras template. You can use the steps like the following to run the sample
+applications. Take the l2fwd as example:
+  1. Configure the DPAA platform:
+	export DPAA_NUM_RX_QUEUES=1
+	export DPAA_FMC_MODE=1
+	fmc -c /usr/bin/dpdk-example/extras/dpaa/usdpaa_config_ls1043.xml \
+		 -p /usr/bin/dpdk-example/extras/dpaa/usdpaa_policy_hash_ipv4_1queue.xml -a
+	mkdir /mnt/hugepages
+	mount -t hugetlbfs none /mnt/hugepages
+
+  2. Run the layer 2 forwarding application:
+       /usr/bin/dpdk-example/l2fwd -c 0x2 -n 1 -- -p 0x1 -q 1
+
