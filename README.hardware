@@ -20,9 +20,7 @@ This BSP supports the following boards:
 2. Change History
 =================
 
-  - 2020/03 (LIN1018-5850): Wind River Linux 10.18 RCPL15. Standard and preempt-rt 
-                       based on NXP LSDK1909.
-  - 2019/12 (LINUXPG-198): Wind River Linux 10.18 RCPL14. Standard and preempt-rt 
+  - 2020/03 (LINUXPG-198): Wind River Linux 10.18 RCPL15. Standard and preempt-rt 
                        based on NXP LSDK1909.
   - 2019/06 (LIN1018-3639): Wind River Linux 10.18 RCPL07. Standard and preempt-rt
                        based on NXP LSDK1812.
