@@ -1,3 +1,0 @@
-COMPATIBLE_MACHINE_nxp-ls1043 = "nxp-ls1043"
-PPA_PATH_nxp-ls1043 = "ls1043"
-

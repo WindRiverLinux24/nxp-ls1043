@@ -1,8 +1,8 @@
 #@TYPE: Machine inc.
 #@NAME: nxp-ls1043 layer
 
-DEFAULTTUNE = "aarch64"
-require conf/machine/include/arm/arch-armv8.inc
+DEFAULTTUNE = "cortexa53"
+require conf/machine/include/tune-cortexa53.inc
 
 MACHINE_FEATURES += "usbhost ext3 vfat pci"
 
@@ -20,11 +20,16 @@ IMAGE_BOOT_FILES ?= " Image fsl-ls1043a-rdb-sdk.dtb"
 MULTILIBS ?= "multilib:lib32"
 DEFAULTTUNE_virtclass-multilib-lib32 ?= "armv7athf-neon"
 
-EXTRA_IMAGEDEPENDS = "u-boot-qoriq u-boot-uenv ppa"
+EXTRA_IMAGEDEPENDS = "u-boot-qoriq u-boot-uenv"
 UBOOT_CONFIG ??= "sdcard nor"
 UBOOT_CONFIG[sdcard] = "ls1043ardb_sdcard_config,,u-boot-with-spl-pbl.bin"
 UBOOT_CONFIG[nor] = "ls1043ardb_config,,u-boot-dtb.bin"
 
 # it's used by many recipes in meta-freescale
 MACHINE_SOCARCH = "${TUNE_PKGARCH}"
+
+# pull in the meta-freescale layer.
+BSP_NXP_DERIVED_append_nxp-ls1043  = " nxp-ls1043"
+
+PREFERRED_PROVIDER_virtual/kernel ??= "linux-yocto"
 
