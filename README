@@ -208,7 +208,7 @@ After build the project, user will get a WIC image under the directory
 tmp-glibc/deploy/images/<bsp name>/ ,such as:
 
 WIC image for SD card:
-tmp-glibc/deploy/images/nxp-ls1043/wrlinux-image-glibc-std-nxp-ls1043.wic
+tmp-glibc/deploy/images/nxp-ls1043/wrlinux-image-std-nxp-ls1043.wic
 
 
 Then user can write the output image to a SD card. WIC image contains kernel,
@@ -229,12 +229,15 @@ To burn uboot and WIC images to SD card, user need to execute two steps:
 
 1) Burn WIC image
 
-# dd if=wrlinux-image-glibc-std-nxp-ls1043.wic of=/dev/your_sd_dev
+# dd if=wrlinux-image-std-nxp-ls1043.wic of=/dev/your_sd_dev
 
-2) User can find fsl_fman_ucode_ls1043_r1.1_106_4_18.bin
-from git://github.com/qoriq-open-source/fm-ucode.git, then burn it with:
+2) Burn NXP pre-built SD image
 
-# dd if=fsl_fman_ucode_ls1043_r1.1_106_4_18.bin of=/dev/your_sd_dev bs=512 seek=18432 conv=fsync
+NXP provides a pre-built SD image which contains U-Boot, RCW, firmware, etc.
+Please download it through:
+"wget https://www.nxp.com/lgfiles/sdk/lsdk2004/firmware_ls1043ardb_uboot_sdboot.img"
+
+# dd if=firmware_ls1043ardb_uboot_sdboot.img of=/dev/your_sd_dev bs=512 seek=8 conv=fsync
 
 6.2 Set board switch
 --------------------
@@ -302,7 +305,7 @@ Multilib is also supported by this BSP.
 
 1. To add 32-bit multilib support for an existing project, use:
 
-    bitbake lib32-wrlinux-image-glibc-std
+    bitbake lib32-wrlinux-image-std
 
 2. To add 32-bit mulilib support for a specific package, use:
 
@@ -333,6 +336,12 @@ NOTES:
    initialization conditions and is not meant to be a "replacement" kernel.
    Rather it has a single goal -- to enable data collection with respect to
    the issue that impacted the initial kernel, and nothing else.
+
+4. Same with LSDK, DPAA1 should be compiled out while creating the image for
+   dump-capture 2nd kernel. With "CONFIG_FSL_SDK_DPA=n" & "CONFIG_FSL_SDK_DPAA_ETH=n"
+   in the kernel .config setting to disable DPAA1, can choose PCIe device "CONFIG_E1000E=y"
+   as a replacement to make NFS working.
+   Please refer to the chapter 7.3 "Known bugs, limitations or technical issues" of "LSDKUG_Rev20.04.pdf".
 
 For more detailed information about kdump, please refer to
 Documentation/kdump/kdump.txt in the kernel source tree.
@@ -365,11 +374,11 @@ applications. Take the l2fwd as example:
   1. Configure the DPAA platform:
 	export DPAA_NUM_RX_QUEUES=1
 	export DPAA_FMC_MODE=1
-	fmc -c /usr/bin/dpdk-example/extras/dpaa/usdpaa_config_ls1043.xml \
-		 -p /usr/bin/dpdk-example/extras/dpaa/usdpaa_policy_hash_ipv4_1queue.xml -a
+	fmc -c /usr/share/dpdk/dpaa/usdpaa_config_ls1043.xml \
+		 -p /usr/share/dpdk/dpaa/usdpaa_policy_hash_ipv4_1queue.xml -a
 	mkdir /mnt/hugepages
 	mount -t hugetlbfs none /mnt/hugepages
 
   2. Run the layer 2 forwarding application:
-       /usr/bin/dpdk-example/l2fwd -c 0x2 -n 1 -- -p 0x1 -q 1
+       /usr/share/dpdk/examples/l2fwd -c 0x2 -n 1 -- -p 0x1 -q 1
 

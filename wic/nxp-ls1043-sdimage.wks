@@ -3,6 +3,5 @@
 # The first partition is NULL, reserved for uboot.
 # The second partition is to accommodate kernel, dtb and rootfs.
 
-part u-boot --source rawcopy --sourceparams="file=u-boot.bin-sdcard" --ondisk mmcblk --no-table --align 4 --fixed-size 3M
-#TODO:fman-ucode stores @ 9M
-part / --source rootfs --ondisk mmcblk --fstype=ext4 --label root --align 1024
+# u-boot and series firmwares will be directly burned with NXP pre-build image
+part / --source rootfs --ondisk mmcblk --fstype=ext4 --label root --align 61440
