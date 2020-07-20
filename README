@@ -363,7 +363,7 @@ for DPDK applications:
  default_hugepagesz=2MB hugepagesz=2MB hugepages=448 isolcpus=1-3 bportals=s0 qportals=s0
 
 To use DPDK applications, user need load specific DTB, fsl-ls1043a-rdb-usdpaa.dtb.
-The DTB can be found in tmp-glibc/deploy/images/nxp-ls1043/, and it alread
+The DTB can be found in tmp-glibc/deploy/images/nxp-ls1043/, and it already
 installed into WIC image.
 
 7.4.3 Sample Applications
