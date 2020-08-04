@@ -382,3 +382,7 @@ applications. Take the l2fwd as example:
   2. Run the layer 2 forwarding application:
        /usr/share/dpdk/examples/l2fwd -c 0x2 -n 1 -- -p 0x1 -q 1
 
+7.5 Secure Boot
+---------------
+
+Refer to the README-ls1043 file in secure boot layer(wrlinux-nxp-secureboot).
