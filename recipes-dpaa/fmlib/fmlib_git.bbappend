@@ -1,2 +1,2 @@
 COMPATIBLE_MACHINE_nxp-ls1043 = "nxp-ls1043"
-TARGET_ARCH_FMLIB = "arm"
+TARGET_ARCH_FMLIB_nxp-ls1043 = "arm"
