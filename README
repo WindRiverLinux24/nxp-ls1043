@@ -27,7 +27,7 @@ is done automatically when using the Wind River configure wrapper.
 
 License
 -------
-Copyright (C) 2019 Wind River Systems, Inc.
+Copyright (C) 2021 Wind River Systems, Inc.
 
 Source code included in the tree for individual recipes is under the LICENSE
 stated in the associated recipe (.bb file) unless otherwise stated.
@@ -75,7 +75,7 @@ along with patch descriptions use git whatchanged on the default
 kernel (git whatchanged <kernel_type>..<bsp_name>). For example:
 
   # cd tmp-glibc/work-shared/<bsp_name>/kernel-source
-  # git whatchanged v5.2/base..v5.2/standard/nxp-lsdk-20.04/nxp-ls1043
+  # git whatchanged v5.10/standard/base..v5.10/standard/nxp-sdk-5.10/nxp-soc
 
 
 4. Boot Instructions
@@ -165,11 +165,11 @@ referred to as the alternate bank.
 NXP provides a pre-built image which contains U-Boot, RCW, etc.
 Please download it through:
 
- wget https://www.nxp.com/lgfiles/sdk/lsdk2004/firmware_ls1043ardb_uboot_norboot.img
+ wget http://www.nxp.com/lgfiles/sdk/lsdk2012/firmware_ls1043ardb_uboot_norboot.img
 
 and burn it to the target board under the U-Boot prompt using the commands below:
 
-=> tftp a0000000 firmware_ls1043ardb_uboot_norboot.img
+=> tftp a0000000 firmware_ls1043ardb_norboot.img
 => protect off 640000000 +$filesize && erase 640000000 +$filesize &&
 cp.b a0000000 640000000 $filesize
 
@@ -185,13 +185,13 @@ to switch to vbank4.
 To get more details about above descriptions, please refer to instructions
 mentioned in the sections
 
-	"4.4 LSDK Memory Layout"
+	"4.2 LSDK memory layout and Userland"
 and
-	"4.1.4 LS1043ARDB"
+	"4.1.9 LSDK Quick Start Guide for LS1043ARDB"
 
 in the NXP's SDK user manual
 
-	"LSDKUG_Rev20.04.pdf".
+	"LSDKUG_Rev21.08.pdf".
 
 6. Creating Partitioned Images(WIC)
 ===================================
@@ -201,7 +201,7 @@ partitioned image on a SD card. The wic command
 generates partitioned images from existing OpenEmbedded build artifacts.
 User can refer to the below URL to get more WIC details:
 
-http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#creating-partitioned-images-using-wic
+https://www.yoctoproject.org/docs/2.4.2/dev-manual/dev-manual.html#creating-partitioned-images-using-wic
 
 This BSP supports disk images for SD card.
 After build the project, user will get a WIC image under the directory
@@ -235,7 +235,7 @@ To burn uboot and WIC images to SD card, user need to execute two steps:
 
 NXP provides a pre-built SD image which contains U-Boot, RCW, firmware, etc.
 Please download it through:
-"wget https://www.nxp.com/lgfiles/sdk/lsdk2004/firmware_ls1043ardb_uboot_sdboot.img"
+"wget http://www.nxp.com/lgfiles/sdk/lsdk2012/firmware_ls1043ardb_uboot_norboot.img"
 
 # dd if=firmware_ls1043ardb_uboot_sdboot.img of=/dev/your_sd_dev bs=512 seek=8 conv=fsync
 
@@ -323,25 +323,25 @@ To reserve a memory region for the capture kernel, pass "crashkernel=512M"
 via the U-Boot command line.
 
 NOTES:
-1. Use vmlinux as a secondary kernel. It can be found in the directory
-   tmp-glibc/work/<bsp name>-wrs-linux/linux-yocto/<kernel version>/linux-<bsp name>-<kernel type>-build/vmlinux
+1. Use Image as a secondary kernel. It can be found in the directory
+   tmp-glibc/deploy/images/nxp-ls1043/Image
 
 2. 512 MB (the size of the memory reserved for crash kernel) is the
    recommended amount of memory. If you add more features to the kernel, you
    can increase this value to accommodate the capture kernel.
 
-3. Kdump: PCI-MSI and SMP is unsupported in 2nd kernel.
-   User needs to append two arguments "pci=nomsi maxcpus=1".
-   Since this 2nd kernel operates under significantly constrained
-   initialization conditions and is not meant to be a "replacement" kernel.
-   Rather it has a single goal -- to enable data collection with respect to
-   the issue that impacted the initial kernel, and nothing else.
+3. Kdump
+   SMP is unsupported in the 2nd kernel, so user needs to append argument "maxcpus=1"
+   in the 2nd kernel bootargs.
+   Because the 2nd kernel runs under limited resource, it should not work as a
+   "replacement" kernel. In contrast, the only purpose of the 2nd kernel is to collect
+   the crashing information of the 1st kernel.
 
 4. Same with LSDK, DPAA1 should be compiled out while creating the image for
-   dump-capture 2nd kernel. With "CONFIG_FSL_SDK_DPA=n" & "CONFIG_FSL_SDK_DPAA_ETH=n"
+   dump-capture 2nd kernel. With "CONFIG_FSL_SDK_DPAA_ETH=n"
    in the kernel .config setting to disable DPAA1, can choose PCIe device "CONFIG_E1000E=y"
    as a replacement to make NFS working.
-   Please refer to the chapter 7.3 "Known bugs, limitations or technical issues" of "LSDKUG_Rev20.04.pdf".
+   Please refer to the chapter 7.3 "Known bugs, limitations or technical issues" of "LSDKUG_Rev21.08.pdf".
 
 For more detailed information about kdump, please refer to
 Documentation/kdump/kdump.txt in the kernel source tree.
@@ -351,36 +351,8 @@ Documentation/kdump/kdump.txt in the kernel source tree.
 
 7.4.1 Install DPDK
 ------------------
-By default, the DPDK user space package is not installed. In order to install the
-package to your rootfs, you should add the below setting to
-"${buildprj}/build/conf/local.conf":
-	IMAGE_INSTALL_append = " dpdk"
 
-7.4.2 Boot Arguments
---------------------
-The following boot arguments can be used in order to obtain the best performance
-for DPDK applications:
- default_hugepagesz=2MB hugepagesz=2MB hugepages=448 isolcpus=1-3 bportals=s0 qportals=s0
-
-To use DPDK applications, user need load specific DTB, fsl-ls1043a-rdb-usdpaa.dtb.
-The DTB can be found in tmp-glibc/deploy/images/nxp-ls1043/, and it already
-installed into WIC image.
-
-7.4.3 Sample Applications
------------------------
-In order to get the sample applications provided by the DPDK, you need to enable
-bsp-extras template. You can use the steps like the following to run the sample
-applications. Take the l2fwd as example:
-  1. Configure the DPAA platform:
-	export DPAA_NUM_RX_QUEUES=1
-	export DPAA_FMC_MODE=1
-	fmc -c /usr/share/dpdk/dpaa/usdpaa_config_ls1043.xml \
-		 -p /usr/share/dpdk/dpaa/usdpaa_policy_hash_ipv4_1queue.xml -a
-	mkdir /mnt/hugepages
-	mount -t hugetlbfs none /mnt/hugepages
-
-  2. Run the layer 2 forwarding application:
-       /usr/share/dpdk/examples/l2fwd -c 0x2 -n 1 -- -p 0x1 -q 1
+Refer to the README file in dpdk feature directory(layers/wrlinux/templates/feature/dpdk).
 
 7.5 Secure Boot
 ---------------

@@ -20,17 +20,8 @@ This BSP supports the following boards:
 2. Change History
 =================
 
-  - 2020/07 (LINUXPG-309): Wind River Linux 10.19 RCPL09. Standard and preempt-rt
-		       based on NXP LSDK2004.
-  - 2020/03 (LINUXPG-198): Wind River Linux 10.18 RCPL15. Standard and preempt-rt 
-                       based on NXP LSDK1909.
-  - 2019/06 (LIN1018-3639): Wind River Linux 10.18 RCPL07. Standard and preempt-rt
-                       based on NXP LSDK1812.
-  - 2017/07 (US95381): Wind River Linux 8.0 RCPL19, add support LS1043A Rev1.1
-                       Based on QorIQ-SDK-2.0-1703.
-  - 2016/09 (US83715): Wind River Linux 8.0 RCPL9, Freescale LS1043A-RDB.
-                       Based on QorIQ-Linux-SDK-v2.0-SOURCE.iso and binary
-                       QorIQLinuxSDKv2.0AARCH64IMAGE.iso
+  - 2021/10 (LINUXPG-926): Wind River Linux 10.21 RCPL06. Standard and preempt-rt
+		       based on NXP LSDK2012/LSDK2108.
 
 
 3. BSP Features
@@ -98,5 +89,5 @@ LS1043A rev1.0:
 	Processor:              LS1043A rev1.0 (0x87920010)
 	Board Revision:	        REV B1, CPLD: V1.4, PCBA: V2.0
 	BootLoader:             U-Boot
-	BootLoader Version:     U-Boot 2019.10-g3cd9bc3993 (Apr 09 2020 - 05:24:51 +0800)
+	BootLoader Version:     U-Boot 2020.04 (Sep 14 2021 - 10:14:46 +0800)
 	FMAN Firmware:          106.4.18
