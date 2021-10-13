@@ -165,7 +165,7 @@ referred to as the alternate bank.
 NXP provides a pre-built image which contains U-Boot, RCW, etc.
 Please download it through:
 
- wget http://www.nxp.com/lgfiles/sdk/lsdk2012/firmware_ls1043ardb_uboot_norboot.img
+ wget http://www.nxp.com/lgfiles/sdk/lsdk2108/firmware_ls1043ardb_norboot.img
 
 and burn it to the target board under the U-Boot prompt using the commands below:
 
@@ -235,7 +235,7 @@ To burn uboot and WIC images to SD card, user need to execute two steps:
 
 NXP provides a pre-built SD image which contains U-Boot, RCW, firmware, etc.
 Please download it through:
-"wget http://www.nxp.com/lgfiles/sdk/lsdk2012/firmware_ls1043ardb_uboot_norboot.img"
+"wget http://www.nxp.com/lgfiles/sdk/lsdk2108/firmware_ls1043ardb_norboot.img"
 
 # dd if=firmware_ls1043ardb_uboot_sdboot.img of=/dev/your_sd_dev bs=512 seek=8 conv=fsync
 
