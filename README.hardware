@@ -20,7 +20,7 @@ This BSP supports the following boards:
 2. Change History
 =================
 
-  - 2021/10 (LINUXPG-926): Wind River Linux 10.21 RCPL06. Standard and preempt-rt
+  - 2021/11 (LINUXPG-926): Wind River Linux 10.21 RCPL07. Standard and preempt-rt
 		       based on NXP LSDK2108.
 
 
