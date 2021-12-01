@@ -16,6 +16,7 @@ Table of Contents
 This BSP supports the following boards:
 
   + NXP LS1043A-RDB: SCH-28529 REV B1 (LS1043A Rev1.0)
+  + NXP LS1043A-RDB(LS1023A mode): SCH-28529 REV B1 (LS1043A Rev1.0) with cores 3 and 4 disabled.
 
 2. Change History
 =================
