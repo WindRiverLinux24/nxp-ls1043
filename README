@@ -354,12 +354,7 @@ Documentation/kdump/kdump.txt in the kernel source tree.
 
 Refer to the README file in dpdk feature directory(layers/wrlinux/templates/feature/dpdk).
 
-7.5 Secure Boot
----------------
-
-Refer to the README-ls1043 file in secure boot layer(wrlinux-nxp-secureboot).
-
-7.6 LS1023A mode
+7.5 LS1023A mode
 ----------------
 
 Enable LS1023A mode by setting sw5[3] as 0.
