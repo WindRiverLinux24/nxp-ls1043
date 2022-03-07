@@ -23,10 +23,6 @@ IMAGE_BOOT_FILES ?= " Image fsl-ls1043a-rdb-sdk.dtb fsl-ls1043a-rdb-usdpaa.dtb f
 MULTILIBS ?= "multilib:lib32"
 DEFAULTTUNE_virtclass-multilib-lib32 ?= "armv7athf-neon"
 
-UBOOT_CONFIG ??= "tfa-secure-boot tfa"
-UBOOT_CONFIG[tfa] = "ls1043ardb_tfa_defconfig"
-UBOOT_CONFIG[tfa-secure-boot] = "ls1043ardb_tfa_SECURE_BOOT_defconfig"
-
 # it's used by many recipes in meta-freescale
 MACHINE_SOCARCH = "${TUNE_PKGARCH}"
 

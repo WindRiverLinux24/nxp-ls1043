@@ -212,8 +212,7 @@ tmp-glibc/deploy/images/nxp-ls1043/wrlinux-image-std-nxp-ls1043.wic
 
 
 Then user can write the output image to a SD card. WIC image contains kernel,
-dtb, rootfs and u-boot. User still need to write fman microcode image to SD card
-by "dd" command.
+dtb and rootfs. User still need to write fman microcode image to SD card by "dd" command.
 
 To change default booting configuration in uboot, user can overwrite following
 variable in uboot and save to SD by saveenv command:
