@@ -33,6 +33,8 @@ PREFERRED_PROVIDER_virtual/kernel ??= "linux-yocto"
 PREFERRED_VERSION_linux-yocto ?= "5.10%"
 PREFERRED_VERSION_dpdk = "19.11-20.12"
 
+NON_MULTILIB_RECIPES_append = " rcw"
+
 # The loader is flashed into the device separately and not part of the SD image
 OSTREE_BOOTLOADER_INCLUDE ?= ""
 OSTREE_SD_UBOOT_WIC1 ?= ""
