@@ -2,7 +2,7 @@
 #@NAME: nxp-ls1043 layer
 
 DEFAULTTUNE = "cortexa53"
-require conf/machine/include/tune-cortexa53.inc
+require conf/machine/include/arm/armv8a/tune-cortexa53.inc
 
 MACHINE_FEATURES += "usbhost ext3 vfat pci"
 
@@ -15,25 +15,25 @@ SERIAL_CONSOLE = "115200 ttyS0"
 MACHINE_EXTRA_RRECOMMENDS = " kernel-modules kernel-devicetree"
 IMAGE_FSTYPES += "tar.bz2 wic wic.bmap"
 WKS_FILE = "nxp-ls1043-sdimage.wks"
-IMAGE_INSTALL_append = " kernel-devicetree kernel-image-image"
+IMAGE_INSTALL:append = " kernel-devicetree kernel-image-image"
 do_image_wic[depends] += "mtools-native:do_populate_sysroot dosfstools-native:do_populate_sysroot"
 IMAGE_BOOT_FILES ?= " Image fsl-ls1043a-rdb-sdk.dtb fsl-ls1043a-rdb-usdpaa.dtb fsl-ls1023a-rdb-sdk.dtb fsl-ls1023a-rdb-usdpaa.dtb"
 
 # multilib support
 MULTILIBS ?= "multilib:lib32"
-DEFAULTTUNE_virtclass-multilib-lib32 ?= "armv7athf-neon"
+DEFAULTTUNE:virtclass-multilib-lib32 ?= "armv7athf-neon"
 
 # it's used by many recipes in meta-freescale
 MACHINE_SOCARCH = "${TUNE_PKGARCH}"
 
 # pull in the meta-freescale layer.
-BSP_NXP_DERIVED_append_nxp-ls1043  = " nxp-ls1043"
+BSP_NXP_DERIVED:append:nxp-ls1043  = " nxp-ls1043"
 
 PREFERRED_PROVIDER_virtual/kernel ??= "linux-yocto"
-PREFERRED_VERSION_linux-yocto ?= "5.10%"
+PREFERRED_VERSION_linux-yocto ?= "5.15%"
 PREFERRED_VERSION_dpdk = "19.11-20.12"
 
-NON_MULTILIB_RECIPES_append = " rcw"
+NON_MULTILIB_RECIPES:append = " rcw"
 
 # The loader is flashed into the device separately and not part of the SD image
 OSTREE_BOOTLOADER_INCLUDE ?= ""
@@ -53,7 +53,7 @@ OSTREE_FDISK_FSZ ?= "128"
 
 OSTREE_UBOOT_CMD ?= "booti"
 INITRAMFS_IMAGE ??= ""
-IMAGE_BOOT_FILES_append = " \
+IMAGE_BOOT_FILES:append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'ostree', 'boot.scr', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'ostree', '${INITRAMFS_IMAGE}-${MACHINE}.${INITRAMFS_FSTYPES};initramfs', '', d)} \
 "

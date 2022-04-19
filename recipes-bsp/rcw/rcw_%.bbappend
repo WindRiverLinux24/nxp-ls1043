@@ -1,2 +1,2 @@
-COMPATIBLE_MACHINE_nxp-ls1043 = "nxp-ls1043"
-M = "ls1043ardb"
+COMPATIBLE_MACHINE:nxp-ls1043 = "nxp-ls1043"
+M:nxp-ls1043 = "ls1043ardb"
