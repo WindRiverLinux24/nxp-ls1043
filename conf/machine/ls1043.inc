@@ -31,7 +31,7 @@ BSP_NXP_DERIVED:append:nxp-ls1043  = " nxp-ls1043"
 
 PREFERRED_PROVIDER_virtual/kernel ??= "linux-yocto"
 PREFERRED_VERSION_linux-yocto ?= "5.15%"
-PREFERRED_VERSION_dpdk = "19.11-20.12"
+PREFERRED_VERSION_dpdk = "21.11"
 
 NON_MULTILIB_RECIPES:append = " rcw"
 
