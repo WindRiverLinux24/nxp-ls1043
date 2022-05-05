@@ -21,7 +21,7 @@ This BSP supports the following boards:
 2. Change History
 =================
 
-  - 2021/11 (LINUXPG-926): Wind River Linux 10.21 RCPL07. Standard and preempt-rt
+  - 2022/11 (LINUXPG-1160): Wind River Linux 10.22 RCPL02. Standard and preempt-rt
 		       based on NXP LSDK2108.
 
 
@@ -90,5 +90,5 @@ LS1043A rev1.0:
 	Processor:              LS1043A rev1.0 (0x87920010)
 	Board Revision:	        REV B1, CPLD: V1.4, PCBA: V2.0
 	BootLoader:             U-Boot
-	BootLoader Version:     U-Boot 2021.04 (Sep 08 2021 - 14:31:25 +0800)
+	BootLoader Version:     U-Boot 2021.04 (Mar 01 2022 - 07:31:56 +0000)
 	FMAN Firmware:          106.4.18

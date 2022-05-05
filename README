@@ -27,7 +27,7 @@ is done automatically when using the Wind River configure wrapper.
 
 License
 -------
-Copyright (C) 2021 Wind River Systems, Inc.
+Copyright (C) 2022 Wind River Systems, Inc.
 
 Source code included in the tree for individual recipes is under the LICENSE
 stated in the associated recipe (.bb file) unless otherwise stated.
@@ -61,7 +61,7 @@ The following table summarizes the valid Wind River Linux distros for this BSP.
   +--------------+-------------+-------------+-------------+
   | valid/distro |   wrlinux   | wrlinux-cgl | wrlinux-ovp |
   +--------------+-------------+-------------+-------------+
-  |    valid     |      Y      |      Y      |      N      |
+  |    valid     |      Y      |      N      |      N      |
   +--------------+-------------+-------------+-------------+
 
 For the supported kernel type for this BSP, please check the TARGET_SUPPORTED_KTYPES
@@ -75,7 +75,7 @@ along with patch descriptions use git whatchanged on the default
 kernel (git whatchanged <kernel_type>..<bsp_name>). For example:
 
   # cd tmp-glibc/work-shared/<bsp_name>/kernel-source
-  # git whatchanged v5.10/standard/base..v5.10/standard/nxp-sdk-5.10/nxp-soc
+  # git whatchanged v5.15/standard/base..v5.15/standard/nxp-sdk-5.15/nxp-soc
 
 
 4. Boot Instructions
@@ -346,7 +346,7 @@ For more detailed information about kdump, please refer to
 Documentation/kdump/kdump.txt in the kernel source tree.
 
 7.4 DPDK
-========
+--------
 
 7.4.1 Install DPDK
 ------------------
