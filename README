@@ -201,7 +201,7 @@ partitioned image on a SD card. The wic command
 generates partitioned images from existing OpenEmbedded build artifacts.
 User can refer to the below URL to get more WIC details:
 
-https://www.yoctoproject.org/docs/2.4.2/dev-manual/dev-manual.html#creating-partitioned-images-using-wic
+https://docs.yoctoproject.org/dev-manual/common-tasks.html#creating-partitioned-images-using-wic
 
 This BSP supports disk images for SD card.
 After build the project, user will get a WIC image under the directory
