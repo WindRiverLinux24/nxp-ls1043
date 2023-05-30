@@ -1,4 +1,4 @@
-        NXP LS1043 Boards
+        NXP LS1043A-RDB Board Support Package
 
 
 1. About this document
@@ -27,7 +27,7 @@ is done automatically when using the Wind River configure wrapper.
 
 License
 -------
-Copyright (C) 2022 Wind River Systems, Inc.
+Copyright (C) 2023 Wind River Systems, Inc.
 
 Source code included in the tree for individual recipes is under the LICENSE
 stated in the associated recipe (.bb file) unless otherwise stated.
@@ -75,7 +75,7 @@ along with patch descriptions use git whatchanged on the default
 kernel (git whatchanged <kernel_type>..<bsp_name>). For example:
 
   # cd tmp-glibc/work-shared/<bsp_name>/kernel-source
-  # git whatchanged v5.15/standard/base..v5.15/standard/nxp-sdk-5.15/nxp-soc
+  # git whatchanged v6.1/standard/base..v6.1/standard/nxp-sdk-6.1/nxp-soc
 
 
 4. Boot Instructions
@@ -159,17 +159,21 @@ images into vbank4 as needed. The instructions below list commands to
 download images to vbank4 and to boot from vbank4. Note that vbank4 is also
 referred to as the alternate bank.
 
-5.2. NXP's pre-built image
---------------------------
+5.2. NXP SDK image
+------------------
 
-NXP provides a pre-built image which contains U-Boot, RCW, etc.
-Please download it through:
+NXP provides SDK to build image which contains U-Boot, RCW, etc.
+Please refer to section 8.1, download Yocto SDK project firstly, and then run below command.
 
- wget http://www.nxp.com/lgfiles/sdk/lsdk2108/firmware_ls1043ardb_norboot.img
+# . ./setup-env -m ls1043ardb -b build_ls1043ardb
+# bitbake secure-boot-qoriq
 
-and burn it to the target board under the U-Boot prompt using the commands below:
+After building, the bootloader image(firmware_ls1043ardb_uboot_<boot-type>.img) is generated
+in directory sdk-nxp-yocto-langdale/build_ls1043ardb/tmp/deploy/images/ls1043ardb.
 
-=> tftp a0000000 firmware_ls1043ardb_norboot.img
+And then burn it to the target board under the U-Boot prompt using the commands below:
+
+=> tftp a0000000 firmware_ls1043ardb_uboot_norboot.img
 => protect off 640000000 +$filesize && erase 640000000 +$filesize &&
 cp.b a0000000 640000000 $filesize
 
@@ -179,19 +183,19 @@ Then use
 
 to switch to vbank4.
 
-5.3. NXP's SDK user manual
---------------------------
+5.3. NXP SDK user manual
+-------------------------
 
 To get more details about above descriptions, please refer to instructions
 mentioned in the sections
 
-	"4.2 LSDK memory layout and Userland"
+	"4.8 LSDK memory layout and Userland"
 and
-	"4.1.9 LSDK Quick Start Guide for LS1043ARDB"
+	"4.7.5 Quick start guide for LS1043ARDB"
 
 in the NXP's SDK user manual
 
-	"LSDKUG_Rev21.08.pdf".
+	"LLDPUG_RevL6.1.1-1.0.0.pdf".
 
 6. Creating Partitioned Images(WIC)
 ===================================
@@ -230,13 +234,27 @@ To burn uboot and WIC images to SD card, user need to execute two steps:
 
 # dd if=wrlinux-image-std-nxp-ls1043.wic of=/dev/your_sd_dev
 
-2) Burn NXP pre-built SD image
+2) Generate Bootloader
 
-NXP provides a pre-built SD image which contains U-Boot, RCW, firmware, etc.
-Please download it through:
-"wget http://www.nxp.com/lgfiles/sdk/lsdk2108/firmware_ls1043ardb_sdboot.img"
+Now, NXP recommend customers to use Yocto-based Linux Distribution POC, so it needs
+to build bootloader manually so that latest bootloader is able to be deployed on NXP
+ls1043ardb board.
 
-# dd if=firmware_ls1043ardb_sdboot.img of=/dev/your_sd_dev bs=512 seek=8 conv=fsync
+Detailed building steps as below:
+
+Refer to section 8.1, download Yocto SDK project firstly, and then run below command.
+
+# . ./setup-env -m ls1043ardb -b build_ls1043ardb
+# bitbake secure-boot-qoriq
+
+After building, the bootloader image(firmware_ls1043ardb_uboot_<boot-type>.img) is generated
+in directory sdk-nxp-yocto-langdale/build_ls1043ardb/tmp/deploy/images/ls1043ardb
+
+3) Burn Bootloader
+
+Burn bootloader image with below command.
+
+# dd if=firmware_ls1043ardb_uboot_sdboot.img of=/dev/your_sd_dev bs=512 seek=8 conv=fsync
 
 6.2 Set board switch
 --------------------
@@ -297,16 +315,16 @@ card.
 7.2. Multilib
 -------------
 
-By default, this BSP is configured as a 64-bit kernel and 64-bit userspace
-with 32-bit userspace multilib support.
+By default, this BSP is configured as a 64-bit kernel and 64-bit userspace.
+In additional, it also supports 32-bit userspace multilib support.
 
 Multilib is also supported by this BSP.
 
-1. To add 32-bit multilib support for an existing project, use:
+1. To enable 32-bit multilib support for WRLinux image, use:
 
     bitbake lib32-wrlinux-image-std
 
-2. To add 32-bit mulilib support for a specific package, use:
+2. To enable 32-bit mulilib support for a specific package, use:
 
     bitbake lib32-<pkg-name>
 
@@ -336,11 +354,11 @@ NOTES:
    "replacement" kernel. In contrast, the only purpose of the 2nd kernel is to collect
    the crashing information of the 1st kernel.
 
-4. Same with LSDK, DPAA1 should be compiled out while creating the image for
+4. Same with SDK, DPAA1 should be compiled out while creating the image for
    dump-capture 2nd kernel. With "CONFIG_FSL_SDK_DPAA_ETH=n"
-   in the kernel .config setting to disable DPAA1, can choose PCIe device "CONFIG_E1000E=y"
+   in the kernel .config setting to disable DPAA1, user can choose PCIe device "CONFIG_E1000E=y"
    as a replacement to make NFS working.
-   Please refer to the chapter 7.3 "Known bugs, limitations or technical issues" of "LSDKUG_Rev21.08.pdf".
+   Please refer to the chapter 7.6 "kdump/kexec User Manual" of "LLDPUG_RevL6.1.1-1.0.0.pdf".
 
 For more detailed information about kdump, please refer to
 Documentation/kdump/kdump.txt in the kernel source tree.
@@ -363,3 +381,30 @@ SW5[3] definition for LS1043A processor as below:
 
 Note:
 When booting up system with LS1023A mode, please use fsl-ls1023a-rdb-sdk.dtb file.
+
+
+8. Layerscape Yocto SDK
+=======================
+
+8.1 Download layer of Yocto SDK project
+---------------------------------------
+
+There are some Yocto layers for Layerscape platform, user can download them with below commands.
+
+	# mkdir ~/bin
+	# curl http://commondatastorage.googleapis.com/git-repo-downloads/repo  > ~/bin/repo
+	# chmod a+x ~/bin/repo
+	# PATH=${PATH}:~/bin
+	# mkdir sdk-nxp-yocto-langdale
+	# cd sdk-nxp-yocto-langdale
+	# ~/bin/repo init -u https://github.com/nxp-qoriq/yocto-sdk -b langdale
+	# ~/bin/repo sync --force-sync
+
+8.2 Build Yocto SDK project
+---------------------------
+
+To build Yocto SDK project, please run below command.
+
+	# cd sdk-nxp-yocto-langdale
+	# . ./setup-env -m ls1043ardb -b build_ls1043ardb
+	# bitbake fsl-image-networking-full
