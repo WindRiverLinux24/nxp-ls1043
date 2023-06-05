@@ -408,3 +408,29 @@ To build Yocto SDK project, please run below command.
 	# cd sdk-nxp-yocto-langdale
 	# . ./setup-env -m ls1043ardb -b build_ls1043ardb
 	# bitbake fsl-image-networking-full
+
+
+9. Build Bootloader
+===================
+
+Because of license limitation, the NXP ls1043 bootloader is not supported on WRLinux product.
+But the necessary recipe files of building bootloader have been integrated into WRLinux product. In this way,
+the customers can build bootloader for NXP ls1043 platform based on WRLinux product by themselves.
+To build bootloader image for NXP ls1043 platform, it only needs to add below contents in local.conf file,
+and then build WRLinux image as usual.
+
+	BB_NO_NETWORK = '0'
+	ACCEPT_FSL_EULA = "1"
+	CUSTOMER_BUILD_BOOTLOADER = "1"
+	CUSTOMER_RECIPES:meta-qoriq += 'secure-boot-qoriq'
+	CUSTOMER_RECIPES:meta-qoriq += 'u-boot-qoriq'
+	CUSTOMER_RECIPES:meta-qoriq += 'qoriq-atf'
+	CUSTOMER_RECIPES:freescale-layer += 'fm-ucode'
+	CUSTOMER_RECIPES:freescale-layer += 'qe-ucode'
+	CUSTOMER_RECIPES:freescale-layer += 'qoriq-cst-native'
+	CUSTOMER_RECIPES:freescale-layer += 'uefi'
+	CUSTOMER_RECIPES:freescale-layer += 'rcw'
+	CUSTOMER_RECIPES:freescale-layer += 'ls2-phy'
+
+Note: If customers want to integrate bootloader into their own product, they MUST consult NXP and their own
+      legal department.

@@ -2,5 +2,6 @@
 # long-description: Creates a partitioned SD card image. Boot files
 # are located in the first vfat partition.
 
+part u-boot --source rawcopy --sourceparams="file=firmware_ls1043ardb_uboot_sdboot.img" --ondisk mmcblk0 --no-table --align 4
 part /boot --source bootimg-partition --ondisk mmcblk0 --fstype=vfat --label boot --active --align 61440
 part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --label root --align 4096

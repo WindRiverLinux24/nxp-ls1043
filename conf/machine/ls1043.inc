@@ -36,6 +36,23 @@ PREFERRED_VERSION_dpdk-module = "21.11.%"
 
 NON_MULTILIB_RECIPES:append = " rcw"
 
+CUSTOMER_BUILD_BOOTLOADER ?= "0"
+SDK_MACHINE = "ls1043ardb"
+UBOOT_CONFIG ??= "tfa-secure-boot tfa"
+UBOOT_CONFIG[tfa] = "ls1043ardb_tfa_defconfig"
+UBOOT_CONFIG[tfa-secure-boot] = "ls1043ardb_tfa_SECURE_BOOT_defconfig"
+RCWNOR ?= "RR_FQPP_1455/rcw_1600"
+RCWSD ?= "RR_FQPP_1455/rcw_1600_sdboot"
+RCWNAND ?= "RR_FQPP_1455/rcw_1600_nandboot"
+QE_UCODE = "iram_Type_A_LS1021a_r1.0.bin"
+FMAN_UCODE ?= "fsl_fman_ucode_ls1043_r1.1_106_4_18.bin"
+EXTRA_IMAGEDEPENDS:append = " ${@bb.utils.contains('CUSTOMER_BUILD_BOOTLOADER', '1', \
+									'fm-ucode rcw qe-ucode uefi qoriq-atf ls2-phy', '', d)}"
+PREFERRED_PROVIDER_u-boot ??= "u-boot-qoriq"
+MACHINEOVERRIDES:prepend = "${@bb.utils.contains('CUSTOMER_BUILD_BOOTLOADER', '1', \
+									'fsl-lsch2:qoriq:qoriq-arm64:ls1043a:ls1043ardb:', '', d)}"
+do_image_wic[depends] += "${@bb.utils.contains('CUSTOMER_BUILD_BOOTLOADER', '1', 'secure-boot-qoriq:do_deploy', '', d)}"
+
 # The loader is flashed into the device separately and not part of the SD image
 OSTREE_BOOTLOADER_INCLUDE ?= ""
 OSTREE_SD_UBOOT_WIC1 ?= ""
