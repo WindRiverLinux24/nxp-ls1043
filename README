@@ -138,7 +138,7 @@ consoledev=ttyS0
 baudrate=115200
 othbootargs=earlycon=uart8250,mmio,0x21c0500
 
-5. Update NXP's pre-built image
+5. Program NXP bootloader image
 ===============================
 
 5.1. On-Board NOR Flash vbank Configuration
@@ -159,17 +159,14 @@ images into vbank4 as needed. The instructions below list commands to
 download images to vbank4 and to boot from vbank4. Note that vbank4 is also
 referred to as the alternate bank.
 
-5.2. NXP SDK image
-------------------
+5.2. NXP bootloader image
+-------------------------
 
-NXP provides SDK to build image which contains U-Boot, RCW, etc.
-Please refer to section 8.1, download Yocto SDK project firstly, and then run below command.
-
-# . ./setup-env -m ls1043ardb -b build_ls1043ardb
-# bitbake secure-boot-qoriq
+WRLinux product provides a solution to build bootloader image which contains U-Boot, RCW, etc.
+Please refer to section 8 to build NXP bootloader image.
 
 After building, the bootloader image(firmware_ls1043ardb_uboot_<boot-type>.img) is generated
-in directory sdk-nxp-yocto-langdale/build_ls1043ardb/tmp/deploy/images/ls1043ardb.
+in directory <building-path>/build/tmp-glibc/deploy/images/nxp-ls1043.
 
 And then burn it to the target board under the U-Boot prompt using the commands below:
 
@@ -228,33 +225,18 @@ variable in uboot and save to SD by saveenv command:
 6.1 Burn images to SD card
 --------------------------
 
-To burn uboot and WIC images to SD card, user need to execute two steps:
+To burn images to SD card, user needs to follow two steps:
 
-1) Burn WIC image
+1) Generate WIC image with NXP bootloader
+
+WRLinux product provides a solution to build WIC image with NXP bootloader.
+Please refer to section 8 for the detailed description.
+After building, the WIC image(wrlinux-image-std-nxp-ls1043.wic) is generated
+in directory <building-path>/build/tmp-glibc/deploy/images/nxp-ls1043.
+
+2) Burn WIC image
 
 # dd if=wrlinux-image-std-nxp-ls1043.wic of=/dev/your_sd_dev
-
-2) Generate Bootloader
-
-Now, NXP recommend customers to use Yocto-based Linux Distribution POC, so it needs
-to build bootloader manually so that latest bootloader is able to be deployed on NXP
-ls1043ardb board.
-
-Detailed building steps as below:
-
-Refer to section 8.1, download Yocto SDK project firstly, and then run below command.
-
-# . ./setup-env -m ls1043ardb -b build_ls1043ardb
-# bitbake secure-boot-qoriq
-
-After building, the bootloader image(firmware_ls1043ardb_uboot_<boot-type>.img) is generated
-in directory sdk-nxp-yocto-langdale/build_ls1043ardb/tmp/deploy/images/ls1043ardb
-
-3) Burn Bootloader
-
-Burn bootloader image with below command.
-
-# dd if=firmware_ls1043ardb_uboot_sdboot.img of=/dev/your_sd_dev bs=512 seek=8 conv=fsync
 
 6.2 Set board switch
 --------------------
@@ -383,34 +365,7 @@ Note:
 When booting up system with LS1023A mode, please use fsl-ls1023a-rdb-sdk.dtb file.
 
 
-8. Layerscape Yocto SDK
-=======================
-
-8.1 Download layer of Yocto SDK project
----------------------------------------
-
-There are some Yocto layers for Layerscape platform, user can download them with below commands.
-
-	# mkdir ~/bin
-	# curl http://commondatastorage.googleapis.com/git-repo-downloads/repo  > ~/bin/repo
-	# chmod a+x ~/bin/repo
-	# PATH=${PATH}:~/bin
-	# mkdir sdk-nxp-yocto-langdale
-	# cd sdk-nxp-yocto-langdale
-	# ~/bin/repo init -u https://github.com/nxp-qoriq/yocto-sdk -b langdale
-	# ~/bin/repo sync --force-sync
-
-8.2 Build Yocto SDK project
----------------------------
-
-To build Yocto SDK project, please run below command.
-
-	# cd sdk-nxp-yocto-langdale
-	# . ./setup-env -m ls1043ardb -b build_ls1043ardb
-	# bitbake fsl-image-networking-full
-
-
-9. Build Bootloader
+8. Build Bootloader
 ===================
 
 Because of license limitation, the NXP ls1043 bootloader is not supported on WRLinux product.
