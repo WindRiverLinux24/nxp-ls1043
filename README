@@ -294,23 +294,7 @@ card.
     ptp4l[252.816]: master offset      22082 s2 freq  +14273 path delay     19848
     ptp4l[253.816]: master offset     -18512 s2 freq  -19696 path delay     21217
 
-7.2. Multilib
--------------
-
-By default, this BSP is configured as a 64-bit kernel and 64-bit userspace.
-In additional, it also supports 32-bit userspace multilib support.
-
-Multilib is also supported by this BSP.
-
-1. To enable 32-bit multilib support for WRLinux image, use:
-
-    bitbake lib32-wrlinux-image-std
-
-2. To enable 32-bit mulilib support for a specific package, use:
-
-    bitbake lib32-<pkg-name>
-
-7.3 kexec/kdump
+7.2 kexec/kdump
 ---------------
 
 To build the boot or capture kernel, use the following option with the configure
@@ -345,15 +329,15 @@ NOTES:
 For more detailed information about kdump, please refer to
 Documentation/kdump/kdump.txt in the kernel source tree.
 
-7.4 DPDK
+7.3 DPDK
 --------
 
-7.4.1 Install DPDK
+7.3.1 Install DPDK
 ------------------
 
 Refer to the README file in dpdk feature directory(layers/wrlinux/templates/feature/dpdk).
 
-7.5 LS1023A mode
+7.4 LS1023A mode
 ----------------
 
 Enable LS1023A mode by setting sw5[3] as 0.
