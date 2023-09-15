@@ -90,5 +90,5 @@ LS1043A rev1.0:
 	Processor:              LS1043A rev1.0 (0x87920010)
 	Board Revision:	        REV B1, CPLD: V1.4, PCBA: V2.0
 	BootLoader:             U-Boot
-	BootLoader Version:     U-Boot 2022.04+fsl+g7376547b9e (Mar 01 2023 - 07:35:40 +0000)
+	BootLoader Version:     U-Boot 2023.04+fsl+gaf7d004eaf (Jun 06 2023 - 14:59:40 +0000)
 	FMAN Firmware:          106.4.18
