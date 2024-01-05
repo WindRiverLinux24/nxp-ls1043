@@ -71,7 +71,7 @@ the corresponding h/w features exist.
 3.2 Unsupported Features
 ------------------------
 
-The following features are not validated:
+The following features are not supported and not validated:
 
   x LPUART: Low Power Universal asynchronous receiver/transmitter
   x QUICC Engine
