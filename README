@@ -27,7 +27,7 @@ is done automatically when using the Wind River configure wrapper.
 
 License
 -------
-Copyright (C) 2023 Wind River Systems, Inc.
+Copyright (C) 2024 Wind River Systems, Inc.
 
 Source code included in the tree for individual recipes is under the LICENSE
 stated in the associated recipe (.bb file) unless otherwise stated.
@@ -75,7 +75,7 @@ along with patch descriptions use git whatchanged on the default
 kernel (git whatchanged <kernel_type>..<bsp_name>). For example:
 
   # cd tmp-glibc/work-shared/<bsp_name>/kernel-source
-  # git whatchanged v6.1/standard/base..v6.1/standard/nxp-sdk-6.1/nxp-soc
+  # git whatchanged v6.6/standard/base..v6.6/standard/nxp-sdk-6.6/nxp-soc
 
 
 4. Boot Instructions
@@ -171,8 +171,8 @@ in directory <building-path>/build/tmp-glibc/deploy/images/nxp-ls1043.
 And then burn it to the target board under the U-Boot prompt using the commands below:
 
 => tftp a0000000 firmware_ls1043ardb_uboot_norboot.img
-=> protect off 640000000 +$filesize && erase 640000000 +$filesize &&
-cp.b a0000000 640000000 $filesize
+=> protect off 64000000 +$filesize && erase 64000000 +$filesize &&
+cp.b a0000000 64000000 $filesize
 
 Then use
 
@@ -186,7 +186,7 @@ to switch to vbank4.
 To get more details about above descriptions, please refer to instructions
 mentioned in the sections
 
-	"4.8 LSDK memory layout and Userland"
+	"4.8 Layerscape LDP memory layout and Userland"
 and
 	"4.7.5 Quick start guide for LS1043ARDB"
 
@@ -202,7 +202,7 @@ partitioned image on a SD card. The wic command
 generates partitioned images from existing OpenEmbedded build artifacts.
 User can refer to the below URL to get more WIC details:
 
-https://docs.yoctoproject.org/dev-manual/common-tasks.html#creating-partitioned-images-using-wic
+https://docs.yoctoproject.org/dev-manual/wic.html
 
 This BSP supports disk images for SD card.
 After build the project, user will get a WIC image under the directory
